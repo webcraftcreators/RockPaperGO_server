@@ -13,7 +13,7 @@ app.use(express.json());
 
 // Paprastas API endpointas
 app.get("/", (req, res) => {
-  res.json({ message: "Serveris veikia! Testas Testas" });
+  res.json({ message: "Serveris veikia! Testas, ar veikia?" });
 });
 
 // WebSocket serveris
