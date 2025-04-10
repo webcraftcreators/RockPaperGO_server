@@ -22,8 +22,6 @@ router.post("/register", async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: password,
-      status: null,
-      socketId: null,
     });
     await newUser.save();
     return res.status(201).json(newUser);
