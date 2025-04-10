@@ -23,10 +23,12 @@ const userShema = new mongoose.Shema({
     },
     status: {
         type: String,
+        default: null,
         require: false,
     },
     socketId: {
         type: String,
+        default: null,
         require: false,
     }
 
