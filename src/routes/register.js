@@ -1,9 +1,10 @@
-const  { User, validate } = require('../models/user')
-const bcrypt = require('bcrypt')
-const express = require('express')
-const router = express.Router()
+import { User, validate } from '../models/user.js';
+import bcrypt from 'bcrypt';
+import express from 'express';
 
-const registerRouter = router.post('/register', async (req, res) => {
+const router = express.Router();
+
+router.post('/register', async (req, res) => {
     const { error } = validate(req.body)
     if (error) {
         return res.status(400).send(error.details[0].message)
@@ -30,4 +31,4 @@ const registerRouter = router.post('/register', async (req, res) => {
     }
 })
 
-module.exports = registerRouter
+export default router;
