@@ -7,10 +7,40 @@ import registerRouter from "./routes/register.js";
 
 dotenv.config();
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/rockpapergo')
-    .then(() => console.log('Connected to MongoDB...'))
-    .catch(err => console.error('Could not connect to MongoDB...', err));
+const connectToDatabase = async () => {
+  const username = process.env.MONGODB_USER;
+  const password = process.env.MONGODB_PASSWORD;
+  const cluster = process.env.MONGODB_CLUSTER;
+  const dbName = process.env.MONGODB_DB;
+  const uri = `mongodb+srv://${username}:${password}@${cluster}/${dbName}?retryWrites=true&w=majority&appName=Cluster0`;
+
+  try {
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+      socketTimeoutMS: 45000,
+      connectTimeoutMS: 10000,
+      retryWrites: true,
+      w: "majority",
+    });
+  } catch (err) {
+    console.error("❌ Could not connect to MongoDB:", err.message);
+    if (process.env.NODE_ENV === "production") {
+      process.exit(1);
+    }
+    throw err;
+  }
+};
+
+const initializeApp = async () => {
+  try {
+    await connectToDatabase();
+  } catch (err) {
+    console.error("Failed to initialize database connection:", err.message);
+  }
+};
+
+initializeApp();
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -20,7 +50,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use('/api', registerRouter);
+app.use('/', registerRouter);
 
 // Basic test route
 app.get("/", (req, res) => {
